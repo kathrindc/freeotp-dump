@@ -16,7 +16,7 @@ const Home: NextPage = () => {
       <main className="flex min-h-screen flex-col items-center justify-center">
         <h1 className="p-4 text-3xl font-bold">FreeOTP Dump</h1>
         <InteractiveArea />
-        <footer className="p-4">
+        <footer className="p-4 text-center">
           A tool created by
           <a
             href="https://github.com/lukas-schaffer"
@@ -29,6 +29,15 @@ const Home: NextPage = () => {
           <a href="https://toast.ws" className="text-emerald-600">
             {" "}
             kathrindc{" "}
+          </a>
+          .
+          <br />
+          Source available on{" "}
+          <a
+            href="https://github.com/kathrindc/freeotp-dump"
+            className="text-emerald-600"
+          >
+            GitHub
           </a>
           .
         </footer>
