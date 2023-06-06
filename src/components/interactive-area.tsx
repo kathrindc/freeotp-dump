@@ -144,7 +144,7 @@ export const InteractiveArea = () => {
               {state.tokens.map((token, index) => (
                 <div key={`token-qr-${index}`} className="mb-3">
                   <p className="text-l mb-1">{token.label}</p>
-                  <QRCode value={toUri(token)} />
+                  <QRCode value={toUri(token)} fgColor="#047857" />
                 </div>
               ))}
             </>
