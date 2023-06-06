@@ -2,6 +2,7 @@
   "name": "freeotp-dump",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@8.6.0",
   "scripts": {
     "build": "next build",
     "dev": "next dev",
