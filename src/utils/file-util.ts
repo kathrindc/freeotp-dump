@@ -39,7 +39,7 @@ export interface MFAToken {
 }
 
 const read = (file: File) => {
-  return new Promise<ArrayBuffer>(async (resolve, reject) => {
+  return new Promise<ArrayBuffer>((resolve, reject) => {
     const reader = new FileReader();
 
     reader.onabort = () => reject(new Error("FileReader aborted"));
@@ -65,8 +65,8 @@ const explode = (buffer: ArrayBuffer) => {
   };
   const ids = Object.keys(map).filter((key) => key.match(uuidFormat));
 
-  for (let id of ids) {
-    const keyObject = map[id];
+  for (const id of ids) {
+    const keyObject = map[id] as { key: string };
 
     if (!keyObject || !keyObject.key) {
       throw new Error(`No key present for token "${id}"`);
@@ -155,7 +155,7 @@ export const decrypt = async (raw: MFARawCollection, passphrase: string) => {
   const tokens: MFAToken[] = [];
   const masterKey = await getMasterKey(raw.master, passphrase);
 
-  for (let rawToken of raw.tokens) {
+  for (const rawToken of raw.tokens) {
     const tokenBuffer = new TextEncoder().encode(rawToken.key.mToken);
     const ivView = new Uint8Array(rawToken.key.mParameters.slice(4, 16));
     const aesGcm: AesGcmParams = {

@@ -13,8 +13,8 @@ class JavaError extends Error {
 export class JavaReader {
   private buffer: ArrayBuffer;
   private view: DataView;
-  private position: number = 0;
-  private count: number = 0;
+  private position = 0;
+  private count = 0;
   private result: { [key: string]: any } | null = null;
 
   constructor(buffer: ArrayBuffer) {
@@ -34,7 +34,7 @@ export class JavaReader {
     this.result = {};
 
     for (let i = 0; i < this.count; ++i) {
-      let keyType = this.u8();
+      const keyType = this.u8();
 
       if (keyType != 0x74) {
         throw new JavaError(
@@ -44,7 +44,7 @@ export class JavaReader {
         );
       }
 
-      let key = this.utf();
+      const key = this.utf();
 
       if (this.result[key]) {
         throw new JavaError(
@@ -54,7 +54,7 @@ export class JavaReader {
         );
       }
 
-      let valueType = this.u8();
+      const valueType = this.u8();
 
       if (valueType != 0x74) {
         throw new JavaError(
@@ -64,7 +64,7 @@ export class JavaReader {
         );
       }
 
-      let value = JSON.parse(this.utf());
+      const value = JSON.parse(this.utf()) as { [key: string]: any };
 
       this.result[key] = value;
     }
@@ -73,7 +73,7 @@ export class JavaReader {
   }
 
   private step(length: number) {
-    let pos = this.position;
+    const pos = this.position;
 
     this.position += length;
 
@@ -86,7 +86,7 @@ export class JavaReader {
 
   private chunk(length: number, encoding: BufferEncoding) {
     const decoder = new TextDecoder(encoding);
-    let pos = this.step(length);
+    const pos = this.step(length);
 
     return decoder.decode(this.buffer.slice(pos, this.position));
   }

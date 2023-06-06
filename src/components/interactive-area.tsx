@@ -41,26 +41,36 @@ const toUri = (token: MFAToken) => {
 export const InteractiveArea = () => {
   const [state, setState] = useState<AreaState>(DefaultState);
 
-  const onDrop = useCallback(async (accepted: File[], _event: DropEvent) => {
-    for (const file of accepted) {
-      const rawCollection = await loadCollection(file);
-
-      setState((state: AreaState) => ({ ...state, rawCollection, stage: 1 }));
+  const onDrop = useCallback((accepted: File[], _event: DropEvent) => {
+    if (!accepted[0]) {
+      return;
     }
+
+    loadCollection(accepted[0])
+      .then((rawCollection: MFARawCollection) => {
+        console.log("Export file parsed successfully.");
+
+        setState((state: AreaState) => ({ ...state, rawCollection, stage: 1 }));
+      })
+      .catch((error: Error) => {
+        console.error(`Parsing failed: ${error.message}`);
+      });
   }, []);
 
-  const onClickDecrypt = useCallback(async () => {
+  const onClickDecrypt = useCallback(() => {
     if (!state.rawCollection || !state.passphrase) {
       return;
     }
 
-    try {
-      const tokens = await decrypt(state.rawCollection, state.passphrase);
+    decrypt(state.rawCollection, state.passphrase)
+      .then((tokens: MFAToken[]) => {
+        console.log("Tokens decrypted succesfully");
 
-      setState((state: AreaState) => ({ ...state, tokens, stage: 2 }));
-    } catch (error) {
-      console.error(error);
-    }
+        setState((state: AreaState) => ({ ...state, tokens, stage: 2 }));
+      })
+      .catch((error: Error) => {
+        console.error(error);
+      });
   }, [state]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -128,7 +138,7 @@ export const InteractiveArea = () => {
             <>
               <p className="mb-4">Converted {state.tokens.length} tokens.</p>
               {state.tokens.map((token, index) => (
-                <div key={"token-qr-" + index} className="mb-3">
+                <div key={`token-qr-${index}`} className="mb-3">
                   <p className="text-l mb-1">{token.label}</p>
                   <QRCode value={toUri(token)} />
                 </div>
