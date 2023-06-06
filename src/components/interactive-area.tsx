@@ -99,6 +99,10 @@ export const InteractiveArea = () => {
             {isDragActive ? "Drop" : "Drag"} your FreeOTP export here, or click
             to select the file.
           </p>
+          <p className="text-gray-400">
+            All the work is done locally on your device to keep your tokens
+            safe.
+          </p>
         </>
       ) : (
         <></>
